@@ -3,6 +3,7 @@ package vn.iotstar.model;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "[User]")
@@ -39,10 +40,19 @@ public class User implements Serializable {
     @Column(name = "createdDate")
     private Date createdDate;
 
+    @Column(name = "status")
+    private int status; // 0: Chưa kích hoạt, 1: Đã kích hoạt
+
+    @Column(name = "code", columnDefinition = "NVARCHAR(50)")
+    private String code; // Mã OTP xác thực
+
+    // Quan hệ 1 - N với Video
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Video> videos;
+
     public User() {}
 
-    public User(String email, String userName, String fullName, String passWord,
-                String avatar, int roleid, String phone, Date createdDate) {
+    public User(String email, String userName, String fullName, String passWord, String avatar, int roleid, String phone, Date createdDate, int status, String code) {
         this.email = email;
         this.userName = userName;
         this.fullName = fullName;
@@ -51,6 +61,8 @@ public class User implements Serializable {
         this.roleid = roleid;
         this.phone = phone;
         this.createdDate = createdDate;
+        this.status = status;
+        this.code = code;
     }
 
     public int getId() { return id; }
@@ -71,4 +83,11 @@ public class User implements Serializable {
     public void setPhone(String phone) { this.phone = phone; }
     public Date getCreatedDate() { return createdDate; }
     public void setCreatedDate(Date createdDate) { this.createdDate = createdDate; }
+    public int getStatus() { return status; }
+    public void setStatus(int status) { this.status = status; }
+    public String getCode() { return code; }
+    public void setCode(String code) { this.code = code; }
+
+    public List<Video> getVideos() { return videos; }
+    public void setVideos(List<Video> videos) { this.videos = videos; }
 }

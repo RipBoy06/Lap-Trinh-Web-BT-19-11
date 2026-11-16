@@ -11,6 +11,13 @@
     <c:if test="${alert != null}">
         <h3 style="color: red;">${alert}</h3>
     </c:if>
+    <c:if test="${alertSuccess != null}">
+    <h3 style="color: green;">${alertSuccess}</h3>
+    </c:if>
+    <p>
+        <a href="${pageContext.request.contextPath}/forgot-password">Quên mật khẩu?</a> | 
+        <a href="${pageContext.request.contextPath}/register">Đăng ký tài khoản</a>
+    </p>
     <form action="${pageContext.request.contextPath}/login" method="post">
         <div>
             <label>Tài khoản:</label><br/>

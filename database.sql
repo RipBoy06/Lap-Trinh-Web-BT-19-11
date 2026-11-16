@@ -13,7 +13,9 @@ CREATE TABLE [User] (
     [avatar] NVARCHAR(255) NULL,
     [roleid] INT DEFAULT 3, -- 1: Admin, 2: Manager, 3/5: User
     [phone] NVARCHAR(50) NULL,
-    [createdDate] DATE NULL
+    [createdDate] DATE NULL,
+    [status] INT DEFAULT 0, -- 0: Chưa kích hoạt, 1: Đã kích hoạt
+    [code] NVARCHAR(50) NULL  -- Mã OTP xác nhận
 );
 GO
 
@@ -25,7 +27,20 @@ CREATE TABLE [Category] (
 );
 GO
 
--- Thêm sẵn 1 tài khoản Admin (roleid = 1) để test
-INSERT INTO [User] (email, username, fullname, password, avatar, roleid, phone, createdDate)
-VALUES ('admin@hcmute.edu.vn', 'admin', N'Nguyễn Hoài Hảo', '123', NULL, 1, '0908617108', GETDATE());
+-- 3. Bảng Video (Câu 4: Mối quan hệ 1-N với User)
+CREATE TABLE [Video] (
+    [videoId] VARCHAR(50) PRIMARY KEY,
+    [title] NVARCHAR(255) NOT NULL,
+    [poster] NVARCHAR(255) NULL,
+    [views] INT DEFAULT 0,
+    [description] NVARCHAR(MAX) NULL,
+    [active] BIT DEFAULT 1,
+    [userId] INT NOT NULL,
+    CONSTRAINT FK_Video_User FOREIGN KEY ([userId]) REFERENCES [User]([id]) ON DELETE CASCADE
+);
+GO
+
+-- Thêm sẵn 1 tài khoản Admin (roleid = 1, status = 1 để đăng nhập được ngay)
+INSERT INTO [User] (email, username, fullname, password, avatar, roleid, phone, createdDate, status, code)
+VALUES ('admin@hcmute.edu.vn', 'admin', N'Nguyễn Hoài Hảo', '123', NULL, 1, '0908617108', GETDATE(), 1, NULL);
 GO

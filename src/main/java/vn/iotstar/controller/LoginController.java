@@ -10,9 +10,9 @@ import vn.iotstar.util.Constant;
 
 import java.io.IOException;
 
-@SuppressWarnings("serial")
 @WebServlet(urlPatterns = "/login")
 public class LoginController extends HttpServlet {
+    private static final long serialVersionUID = 1L;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -62,7 +62,16 @@ public class LoginController extends HttpServlet {
 
         UserService service = new UserServiceImpl();
         User user = service.login(username, password);
+
         if (user != null) {
+            // Kiểm tra trạng thái kích hoạt tài khoản (Câu 1 & 2)
+            if (user.getStatus() == 0) {
+                req.setAttribute("alert", "Tài khoản chưa được kích hoạt! Vui lòng kiểm tra email để nhập mã OTP.");
+                req.getSession().setAttribute("verifyEmail", user.getEmail());
+                req.getRequestDispatcher("/views/verify.jsp").forward(req, resp);
+                return;
+            }
+
             HttpSession session = req.getSession(true);
             session.setAttribute("account", user);
             if (isRememberMe) {
@@ -70,8 +79,7 @@ public class LoginController extends HttpServlet {
             }
             resp.sendRedirect(req.getContextPath() + "/waiting");
         } else {
-            alertMsg = "Tài khoản hoặc mật khẩu không đúng";
-            req.setAttribute("alert", alertMsg);
+            req.setAttribute("alert", "Tài khoản hoặc mật khẩu không chính xác!");
             req.getRequestDispatcher("/views/login.jsp").forward(req, resp);
         }
     }
