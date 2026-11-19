@@ -58,6 +58,7 @@
             <artifactId>mssql-jdbc</artifactId>
             <version>12.8.1.jre11</version>
         </dependency>
+
         <!-- Jakarta Mail -->
         <dependency>
             <groupId>org.eclipse.angus</groupId>
@@ -71,8 +72,21 @@
             <artifactId>jbcrypt</artifactId>
             <version>0.4</version>
         </dependency>
-    </dependencies>
 
+        <!-- Sitemesh 3 (Jakarta EE 10 / Tomcat 10) -->
+        <dependency>
+            <groupId>org.sitemesh</groupId>
+            <artifactId>sitemesh</artifactId>
+            <version>3.2.1</version>
+        </dependency>
+
+        <!-- Cloudinary SDK -->
+        <dependency>
+            <groupId>com.cloudinary</groupId>
+            <artifactId>cloudinary-http44</artifactId>
+            <version>1.39.0</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <finalName>BT1</finalName>

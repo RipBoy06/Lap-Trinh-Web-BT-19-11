@@ -1,77 +1,81 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
-    <title>Video Của Tôi (Phân Trang 6 Video / Trang)</title>
+    <title>Videos Của Tôi</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; background-color: #f8f9fa; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        .video-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-        .video-card { background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); overflow: hidden; }
-        .video-thumb { width: 100%; height: 170px; object-fit: cover; background-color: #333; }
-        .video-info { padding: 12px; }
-        .video-title { font-size: 16px; font-weight: bold; margin: 0 0 8px; }
-        .video-title a { color: #333; text-decoration: none; }
-        .video-title a:hover { color: #007bff; text-decoration: underline; }
-        .video-meta { font-size: 13px; color: #777; }
-        .pagination { display: flex; justify-content: center; margin-top: 30px; gap: 8px; }
-        .pagination a, .pagination span { padding: 8px 14px; border: 1px solid #ccc; text-decoration: none; color: #333; border-radius: 4px; }
-        .pagination .active { background-color: #007bff; color: white; border-color: #007bff; }
+        .video-card { transition: transform 0.2s, box-shadow 0.2s; border: none; border-radius: 10px; overflow: hidden; }
+        .video-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
+        .video-thumb { height: 180px; object-fit: cover; background: #000; width: 100%; }
     </style>
 </head>
 <body>
-    <jsp:include page="/views/topbar.jsp" />
-    <div class="container">
-        <h2>📹 Danh Sách Videos Của Bạn (Phân trang 6 sp/trang)</h2>
-        <div class="video-grid">
+    <div class="container py-2">
+        <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+            <h3 class="fw-bold text-primary mb-0">
+                <i class="bi bi-collection-play me-2"></i>Videos Của Tôi (Phân Trang 6 Video / Trang)
+            </h3>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
             <c:forEach items="${videoList}" var="v">
-                <div class="video-card">
-                    <c:choose>
-                        <c:when test="${not empty v.poster}">
-                            <img src="${pageContext.request.contextPath}/image?fname=${v.poster}" class="video-thumb" alt="${v.title}" />
-                        </c:when>
-                        <c:otherwise>
-                            <div class="video-thumb" style="display: flex; align-items: center; justify-content: center; color: white;">No Image</div>
-                        </c:otherwise>
-                    </c:choose>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <!-- Bấm chuột vào tiêu đề để xem chi tiết và play video -->
-                            <a href="${pageContext.request.contextPath}/video/detail?id=${v.videoId}">${v.title}</a>
-                        </h3>
-                        <div class="video-meta">
-                            <span>👁 ${v.views} lượt xem</span> | 
-                            <span>Trạng thái: <b>${v.active ? 'Hoạt động' : 'Tạm ẩn'}</b></span>
+                <div class="col">
+                    <div class="card h-100 video-card shadow-sm">
+                        <c:choose>
+                            <c:when test="${not empty v.poster}">
+                                <img src="${pageContext.request.contextPath}/image?fname=${v.poster}" class="video-thumb" alt="${v.title}" />
+                            </c:when>
+                            <c:otherwise>
+                                <div class="video-thumb d-flex align-items-center justify-content-center text-secondary">
+                                    <i class="bi bi-play-btn fs-1"></i>
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title fs-6 fw-bold">
+                                <a href="${pageContext.request.contextPath}/video/detail?id=${v.videoId}" class="text-decoration-none text-dark stretched-link">
+                                    ${v.title}
+                                </a>
+                            </h5>
+                            <div class="mt-auto text-muted small d-flex justify-content-between pt-2 border-top">
+                                <span><i class="bi bi-eye me-1"></i>${v.views} lượt xem</span>
+                                <span>
+                                    <span class="badge ${v.active ? 'bg-success' : 'bg-secondary'}">
+                                        ${v.active ? 'Công khai' : 'Tạm ẩn'}
+                                    </span>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </c:forEach>
         </div>
+
         <c:if test="${empty videoList}">
-            <p>Bạn chưa có video nào.</p>
+            <div class="text-center py-5">
+                <i class="bi bi-film fs-1 text-muted"></i>
+                <p class="text-muted mt-2">Bạn chưa đăng tải video nào.</p>
+            </div>
         </c:if>
 
         <!-- Phân trang 6 video/trang -->
         <c:if test="${totalPages > 1}">
-            <div class="pagination">
-                <c:if test="${currentPage > 1}">
-                    <a href="${pageContext.request.contextPath}/video?page=${currentPage - 1}">« Trước</a>
-                </c:if>
-                <c:forEach begin="1" end="${totalPages}" var="i">
-                    <c:choose>
-                        <c:when test="${currentPage == i}">
-                            <span class="active">${i}</span>
-                        </c:when>
-                        <c:otherwise>
-                            <a href="${pageContext.request.contextPath}/video?page=${i}">${i}</a>
-                        </c:otherwise>
-                    </c:choose>
-                </c:forEach>
-                <c:if test="${currentPage < totalPages}">
-                    <a href="${pageContext.request.contextPath}/video?page=${currentPage + 1}">Sau »</a>
-                </c:if>
-            </div>
+            <nav class="mt-5 d-flex justify-content-center">
+                <ul class="pagination shadow-sm">
+                    <li class="page-item ${currentPage <= 1 ? 'disabled' : ''}">
+                        <a class="page-link" href="${pageContext.request.contextPath}/video?page=${currentPage - 1}">« Trước</a>
+                    </li>
+                    <c:forEach begin="1" end="${totalPages}" var="i">
+                        <li class="page-item ${currentPage == i ? 'active' : ''}">
+                            <a class="page-link" href="${pageContext.request.contextPath}/video?page=${i}">${i}</a>
+                        </li>
+                    </c:forEach>
+                    <li class="page-item ${currentPage >= totalPages ? 'disabled' : ''}">
+                        <a class="page-link" href="${pageContext.request.contextPath}/video?page=${currentPage + 1}">Sau »</a>
+                    </li>
+                </ul>
+            </nav>
         </c:if>
     </div>
 </body>

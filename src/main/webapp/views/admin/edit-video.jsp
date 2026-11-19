@@ -1,47 +1,72 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
-    <title>Cập Nhật Video</title>
+    <title>Chỉnh Sửa Video</title>
 </head>
 <body>
-    <jsp:include page="/views/topbar.jsp" />
-    <div style="max-width: 550px; margin: 20px auto; font-family: Arial, sans-serif;">
-        <h2>Chỉnh Sửa Video</h2>
-        <form action="<c:url value='/admin/video/edit'/>" method="post" enctype="multipart/form-data">
-            <div>
-                <label>Mã Video (ID):</label><br/>
-                <input type="text" name="videoId" value="${video.videoId}" readonly style="width: 100%; padding: 8px; background: #eee;"/>
+    <div class="card shadow-sm border-0 rounded-3 p-4">
+        <h3 class="mb-4 text-primary border-bottom pb-2">
+            <i class="bi bi-pencil-square me-2"></i>Chỉnh Sửa Video (Edit Video)
+        </h3>
+
+        <form action="<c:url value='/admin/video/edit'/>" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Mã Video (ID):</label>
+                <input type="text" name="videoId" class="form-control bg-light" value="${video.videoId}" readonly/>
             </div>
-            <br/>
-            <div>
-                <label>Tiêu đề Video:</label><br/>
-                <input type="text" name="title" value="${video.title}" required style="width: 100%; padding: 8px;"/>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Tiêu Đề Video: <span class="text-danger">*</span></label>
+                <input type="text" name="title" class="form-control" value="${video.title}" required minlength="3"/>
+                <div class="invalid-feedback">Tiêu đề video không được để trống (tối thiểu 3 ký tự).</div>
             </div>
-            <br/>
-            <div>
-                <label>Hình ảnh hiện tại:</label><br/>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Poster Hiện Tại:</label><br/>
                 <c:if test="${not empty video.poster}">
-                    <img height="100" width="150" src="<c:url value='/image?fname=${video.poster}'/>" style="object-fit: cover; margin-bottom: 5px;"/>
+                    <img src="${pageContext.request.contextPath}/image?fname=${video.poster}" class="rounded shadow-sm mb-2" height="120" alt="Poster"/>
                 </c:if>
-                <br/>
-                <label>Thay đổi Poster (chọn file mới nếu muốn đổi):</label><br/>
-                <input type="file" name="poster" accept="image/*" style="width: 100%; padding: 8px;"/>
+                <input type="file" name="poster" class="form-control" accept="image/*"/>
+                <div class="form-text">Để trống nếu không muốn thay đổi ảnh poster.</div>
             </div>
-            <br/>
-            <div>
-                <label>Mô tả video:</label><br/>
-                <textarea name="description" rows="4" style="width: 100%; padding: 8px;">${video.description}</textarea>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Mô Tả Chi Tiết:</label>
+                <textarea name="description" class="form-control" rows="4">${video.description}</textarea>
             </div>
-            <br/>
-            <div>
-                <input type="checkbox" name="active" value="1" ${video.active ? 'checked' : ''} /> Kích hoạt hiển thị
+
+            <div class="mb-4 form-check form-switch">
+                <input class="form-check-input" type="checkbox" name="active" value="1" id="activeVideo" ${video.active ? 'checked' : ''}>
+                <label class="form-check-label fw-bold" for="activeVideo">Kích hoạt hiển thị công khai</label>
             </div>
-            <br/>
-            <button type="submit" style="padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer;">Cập Nhật Video</button>
-            <a href="<c:url value='/admin/video/list'/>" style="margin-left: 15px;">Hủy bỏ</a>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary px-4">
+                    <i class="bi bi-check-circle me-1"></i>Cập Nhật Video
+                </button>
+                <a href="<c:url value='/admin/video/list'/>" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-1"></i>Hủy Bỏ
+                </a>
+            </div>
         </form>
     </div>
+
+    <script>
+        (function () {
+            'use strict';
+            var forms = document.querySelectorAll('.needs-validation');
+            Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+    </script>
 </body>
 </html>

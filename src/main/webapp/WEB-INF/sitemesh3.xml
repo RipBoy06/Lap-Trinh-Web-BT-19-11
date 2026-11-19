@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemesh>
+    <!-- Decorator cho Admin -->
+    <mapping path="/admin/*" decorator="/views/decorators/admin.jsp"/>
+
+    <!-- Decorator mặc định cho toàn bộ Web (Bootstrap 5) -->
+    <mapping path="/*" decorator="/views/decorators/web.jsp"/>
+
+    <!-- Loại trừ các file và servlet hình ảnh -->
+    <mapping path="/image*" exclude="true"/>
+    <mapping path="/assets/*" exclude="true"/>
+    <mapping path="/static/*" exclude="true"/>
+</sitemesh>

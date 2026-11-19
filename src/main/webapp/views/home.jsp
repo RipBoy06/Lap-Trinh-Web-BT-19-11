@@ -1,52 +1,59 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
-    <title>Trang Chủ - 10 Video Mới Nhất</title>
+    <title>Trang Chủ - Top 10 Video Mới Nhất</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; background-color: #f8f9fa; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
-        .video-card { background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); overflow: hidden; }
-        .video-thumb { width: 100%; height: 160px; object-fit: cover; background-color: #333; }
-        .video-info { padding: 12px; }
-        .video-title { font-size: 16px; font-weight: bold; margin: 0 0 8px; }
-        .video-title a { color: #333; text-decoration: none; }
-        .video-title a:hover { color: #007bff; text-decoration: underline; }
-        .video-meta { font-size: 13px; color: #777; }
+        .video-card { transition: transform 0.2s, box-shadow 0.2s; border: none; border-radius: 10px; overflow: hidden; }
+        .video-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
+        .video-thumb { height: 175px; object-fit: cover; background: #000; width: 100%; }
     </style>
 </head>
 <body>
-    <jsp:include page="/views/topbar.jsp" />
-    <div class="container">
-        <h2>🔥 10 Video Mới Nhất Trên Hệ Thống</h2>
-        <div class="video-grid">
+    <div class="container py-2">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="fw-bold text-dark mb-0">
+                <i class="bi bi-fire text-danger me-2"></i>10 Video Mới Nhất
+            </h3>
+            <span class="badge bg-danger rounded-pill px-3 py-2">Trending</span>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
             <c:forEach items="${top10Videos}" var="v">
-                <div class="video-card">
-                    <c:choose>
-                        <c:when test="${not empty v.poster}">
-                            <img src="${pageContext.request.contextPath}/image?fname=${v.poster}" class="video-thumb" alt="${v.title}" />
-                        </c:when>
-                        <c:otherwise>
-                            <div class="video-thumb" style="display: flex; align-items: center; justify-content: center; color: white;">No Image</div>
-                        </c:otherwise>
-                    </c:choose>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <!-- Bấm chuột vào tiêu đề để xem chi tiết và play video -->
-                            <a href="${pageContext.request.contextPath}/video/detail?id=${v.videoId}">${v.title}</a>
-                        </h3>
-                        <div class="video-meta">
-                            <span>👁 ${v.views} lượt xem</span> | 
-                            <span>Đăng bởi: <b>${v.user != null ? v.user.fullName : 'Admin'}</b></span>
+                <div class="col">
+                    <div class="card h-100 video-card shadow-sm">
+                        <c:choose>
+                            <c:when test="${not empty v.poster}">
+                                <img src="${pageContext.request.contextPath}/image?fname=${v.poster}" class="video-thumb" alt="${v.title}" />
+                            </c:when>
+                            <c:otherwise>
+                                <div class="video-thumb d-flex align-items-center justify-content-center text-secondary">
+                                    <i class="bi bi-play-btn fs-1"></i>
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title fs-6 fw-bold">
+                                <a href="${pageContext.request.contextPath}/video/detail?id=${v.videoId}" class="text-decoration-none text-dark stretched-link">
+                                    ${v.title}
+                                </a>
+                            </h5>
+                            <div class="mt-auto text-muted small d-flex justify-content-between pt-2 border-top">
+                                <span><i class="bi bi-eye me-1"></i>${v.views} xem</span>
+                                <span><i class="bi bi-person me-1"></i>${v.user != null ? v.user.fullName : 'Admin'}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </c:forEach>
         </div>
+
         <c:if test="${empty top10Videos}">
-            <p>Chưa có video nào trong hệ thống.</p>
+            <div class="text-center py-5">
+                <i class="bi bi-inbox fs-1 text-muted"></i>
+                <p class="text-muted mt-2">Hệ thống chưa có video nào.</p>
+            </div>
         </c:if>
     </div>
 </body>
